@@ -604,6 +604,10 @@ CHART(
 
 ## HISTOGRAM()
 
+There are two types of `HISTOGRAM()`. The first type is "fixed bins" which is useful when the input value range (min to max) is predictable or fixed. The second type is "dynamic bins" which is useful when the value ranges are unknown.
+
+### Fixed Bins
+
 *Syntax*: `HISTOGRAM(value, bins [, category] [, order] )`  {{< neo_since ver="8.0.15" />}}
 
 - `value` *number*
@@ -674,6 +678,34 @@ CHART(
 {{< figure src="../img/tql-histogram-cat.jpg" width="500" >}}
 {{</ tab >}}
 {{</ tabs >}}
+
+### Dynamic Bins
+
+*Syntax*: `HISTOGRAM(value [, maxBins] )`  {{< neo_since ver="8.0.46" />}}
+
+- `value` *number*
+- `maxBins` *number* specifies the maximum number of bins. The default is 100 if not specified.
+
+`HISTOGRAM()` takes values and counts their distribution within each bin.
+The bins are automatically adjusted based on the input values and can grow up to the specified `maxBins`.
+The resulting column `value` represents the average value of each bin,
+while the column `count` indicates the number of values within that range.
+
+```js {{linenos=table,hl_lines=[3]}}
+FAKE( arrange(1, 100, 1) )
+MAPVALUE(0, (simplex(12, value(0)) + 1) * 100)
+HISTOGRAM(value(0), maxBins(5))
+CSV( precision(0), header(true) )
+```
+
+```csv
+value,count
+47,12
+75,29
+99,29
+119,18
+156,12
+```
 
 ## BOXPLOT()
 
