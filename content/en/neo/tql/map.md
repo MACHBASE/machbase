@@ -686,10 +686,11 @@ CHART(
 - `value` *number*
 - `maxBins` *number* specifies the maximum number of bins. The default is 100 if not specified.
 
-`HISTOGRAM()` takes values and counts their distribution within each bin.
-The bins are automatically adjusted based on the input values and can grow up to the specified `maxBins`.
-The resulting column `value` represents the average value of each bin,
-while the column `count` indicates the number of values within that range.
+`HISTOGRAM()` takes values and a maximum number of bins.
+The bins are dynamically adjusted based on the input values and can expand up to the specified `maxBins`.
+The resulting `value` column represents the average value of each bin,
+while the `count` column indicates the number of values within that range.
+Thus, the product of `value` and `count` for a bin equals the sum of the values within that bin.
 
 ```js {{linenos=table,hl_lines=[3]}}
 FAKE( arrange(1, 100, 1) )
